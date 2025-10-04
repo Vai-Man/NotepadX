@@ -20,18 +20,6 @@ A minimal web-based note-taking application built with vanilla HTML, CSS, and Ja
 
 No installation or dependencies required.
 
-## Project Structure
-
-```
-notepadx/
-├── index.html          # Main HTML structure
-├── style.css           # Styling and design
-├── script.js           # JavaScript functionality
-├── README.md           # Documentation
-├── CONTRIBUTING.md     # Contribution guidelines
-└── CODE_OF_CONDUCT.md  # Code of conduct
-```
-
 ## How to Use
 
 - **Write**: Click the text area and start typing
@@ -69,10 +57,7 @@ Contributions welcome! Ideas for features:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
-## License
-
-MIT License - see LICENSE file for details.
-
 ---
 
 Built for Hacktoberfest 2025
+
