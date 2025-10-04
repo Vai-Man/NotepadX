@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotepadX - Simple Note Taking App</title>
+    <!-- Link to external CSS file for styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main container for the app -->
+    <div class="container">
+        <!-- App header -->
+        <header>
+            <h1>NotepadX</h1>
+            <p class="subtitle">Your simple, lightweight note-taking companion</p>
+        </header>
+
+        <!-- Main content area -->
+        <main>
+            <!-- Text area where users can type their notes -->
+            <textarea 
+                id="notepad" 
+                placeholder="Start typing your notes here..."
+                aria-label="Note editor"
+            ></textarea>
+
+            <!-- Button controls -->
+            <div class="button-group">
+                <!-- Save button - stores notes to localStorage -->
+                <button id="saveBtn" class="btn btn-primary" aria-label="Save note">
+                    Save
+                </button>
+                
+                <!-- Clear button - erases all text -->
+                <button id="clearBtn" class="btn btn-secondary" aria-label="Clear note">
+                    Clear
+                </button>
+                
+                <!-- Download button - downloads notes as .txt file -->
+                <button id="downloadBtn" class="btn btn-success" aria-label="Download note">
+                    Download
+                </button>
+            </div>
+
+            <!-- Status message area -->
+            <div id="statusMessage" class="status-message"></div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built for Hacktoberfest | Open for contributions!</p>
+        </footer>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
