@@ -10,6 +10,7 @@ const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const statusMessage = document.getElementById('statusMessage');
+const wordCountEl = document.getElementById('wordCount');
 
 // ===== CONSTANTS =====
 // Key used to store notes in localStorage
@@ -25,6 +26,9 @@ function init() {
     saveBtn.addEventListener('click', saveNote);
     clearBtn.addEventListener('click', clearNote);
     downloadBtn.addEventListener('click', downloadNote);
+    // Update word count as the user types
+    notepad.addEventListener('input', updateWordCount);
++
     
     // Auto-save feature: save notes every 5 seconds if there's content
     setInterval(autoSave, 5000);
@@ -43,6 +47,7 @@ function loadNote() {
         if (savedContent) {
             notepad.value = savedContent;
             showStatus('Previous notes loaded successfully');
+            updateWordCount();
         }
     } catch (error) {
         // Handle any errors (e.g., localStorage not available)
@@ -65,6 +70,7 @@ function saveNote() {
         
         // Show success message
         showStatus('Notes saved successfully');
+        updateWordCount();
     } catch (error) {
         // Handle any errors (e.g., storage quota exceeded)
         showStatus('Failed to save notes. Please try again.', true);
@@ -85,6 +91,8 @@ function autoSave() {
         try {
             localStorage.setItem(STORAGE_KEY, content);
             // Silent save - no status message to avoid disrupting user
+            // keep word count up-to-date on auto-save too
+            updateWordCount();
         } catch (error) {
             console.error('Auto-save error:', error);
         }
@@ -112,6 +120,7 @@ function clearNote() {
         
         // Focus back on textarea
         notepad.focus();
+        updateWordCount();
     }
 }
 
@@ -150,11 +159,29 @@ function downloadNote() {
         
         // Show success message
         showStatus('Notes downloaded successfully');
+        updateWordCount();
     } catch (error) {
         // Handle any errors
         showStatus('Failed to download notes. Please try again.', true);
         console.error('Download error:', error);
     }
+}
+
+// ===== WORD COUNT FUNCTION =====
+/**
+ * Update the word count display based on textarea content
+ */
+function updateWordCount() {
+    if (!wordCountEl) return;
+    const text = notepad.value.trim();
+    if (text.length === 0) {
+        wordCountEl.textContent = 'Words: 0';
+        return;
+    }
+
+    // Split by whitespace sequences to count words
+    const words = text.split(/\s+/).filter(Boolean);
+    wordCountEl.textContent = `Words: ${words.length}`;
 }
 
 // ===== STATUS MESSAGE FUNCTION =====

@@ -79,6 +79,14 @@ main {
     flex-wrap: wrap;
 }
 
+/* Word count display */
+.word-count {
+    text-align: right;
+    color: #555;
+    font-weight: 900;
+    font-size: 0.95rem;
+}
+
 /* Base button styles */
 .btn {
     flex: 1;
