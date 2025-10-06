@@ -87,6 +87,27 @@ main {
     font-size: 0.95rem;
 }
 
+/* Simple search controls */
+.search-group {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.search-group input[type="search"] {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    min-width: 180px;
+}
+
+.search-group .btn {
+    min-width: auto;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
 /* Base button styles */
 .btn {
     flex: 1;
