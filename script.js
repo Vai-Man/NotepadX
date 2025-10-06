@@ -11,6 +11,12 @@ const clearBtn = document.getElementById('clearBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const statusMessage = document.getElementById('statusMessage');
 const wordCountEl = document.getElementById('wordCount');
+const searchInput = document.getElementById('searchInput');
+const prevMatchBtn = document.getElementById('prevMatch');
+const nextMatchBtn = document.getElementById('nextMatch');
+
+let lastSearch = '';
+let lastIndex = -1;
 
 // ===== CONSTANTS =====
 // Key used to store notes in localStorage
@@ -28,6 +34,18 @@ function init() {
     downloadBtn.addEventListener('click', downloadNote);
     // Update word count as the user types
     notepad.addEventListener('input', updateWordCount);
+
+    // Wire up search controls if present
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                findNext();
+            }
+        });
+    }
+    if (nextMatchBtn) nextMatchBtn.addEventListener('click', findNext);
+    if (prevMatchBtn) prevMatchBtn.addEventListener('click', findPrev);
 +
     
     // Auto-save feature: save notes every 5 seconds if there's content
@@ -182,6 +200,71 @@ function updateWordCount() {
     // Split by whitespace sequences to count words
     const words = text.split(/\s+/).filter(Boolean);
     wordCountEl.textContent = `Words: ${words.length}`;
+}
+
+// ===== SIMPLE SEARCH =====
+/**
+ * Find next occurrence of search term and select it in the textarea
+ */
+function findNext() {
+    if (!searchInput) return;
+    const term = searchInput.value;
+    if (!term) return;
+
+    const content = notepad.value;
+    let startPos = 0;
+    if (lastSearch === term && lastIndex >= 0) {
+        startPos = lastIndex + 1; // search after previous match
+    }
+
+    const idx = content.toLowerCase().indexOf(term.toLowerCase(), startPos);
+    if (idx >= 0) {
+        notepad.focus();
+        notepad.setSelectionRange(idx, idx + term.length);
+        lastSearch = term;
+        lastIndex = idx;
+        showStatus(`Found at ${idx}`);
+    } else {
+        // wrap around search
+        const wrapIdx = content.toLowerCase().indexOf(term.toLowerCase(), 0);
+        if (wrapIdx >= 0) {
+            notepad.focus();
+            notepad.setSelectionRange(wrapIdx, wrapIdx + term.length);
+            lastSearch = term;
+            lastIndex = wrapIdx;
+            showStatus('Wrapped to first match');
+        } else {
+            showStatus('No matches found', true);
+            lastIndex = -1;
+        }
+    }
+}
+
+/**
+ * Find previous occurrence of search term and select it in the textarea
+ */
+function findPrev() {
+    if (!searchInput) return;
+    const term = searchInput.value;
+    if (!term) return;
+
+    const content = notepad.value;
+    let endPos = content.length;
+    if (lastSearch === term && lastIndex > 0) {
+        endPos = lastIndex - 1; // search before previous match
+    }
+
+    const idx = content.toLowerCase().lastIndexOf(term.toLowerCase(), endPos);
+    if (idx >= 0) {
+        notepad.focus();
+        notepad.setSelectionRange(idx, idx + term.length);
+        lastSearch = term;
+        lastIndex = idx;
+        showStatus(`Found at ${idx}`);
+    } else {
+        showStatus('No previous matches', true);
+        lastIndex = -1;
+    }
 }
 
 // ===== STATUS MESSAGE FUNCTION =====
