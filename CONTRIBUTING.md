@@ -9,7 +9,7 @@ Thank you for your interest in contributing! Any contribution, big or small, is 
 2. Clone your fork:
    ```bash
    git clone https://github.com/AbhinavGupta7/notepadX.git
-````
+   ```
 
 3. Make your changes in a separate branch:
 
@@ -29,3 +29,4 @@ Thank you for your interest in contributing! Any contribution, big or small, is 
 6. Open a pull request.
 
 Thank you for helping make this project better!
+
