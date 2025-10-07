@@ -35,26 +35,10 @@
                 <button id="nextMatch" class="btn">Next</button>
             </div>
 
-            <!-- Font controls row -->
-            <div class="font-controls-row">
-                <!-- Font size control -->
-                <div class="font-size-group" aria-label="Font size control">
-                    <label for="fontSize" class="font-size-label">Font size:</label>
-                    <input id="fontSize" type="range" min="12" max="28" value="16" step="1" aria-label="Font size slider">
-                    <span id="fontSizeValue" class="font-size-value">16px</span>
-                </div>
-
-                <!-- Font family control -->
-                <div class="font-family-group" aria-label="Font family control">
-                    <label for="fontFamily" class="font-family-label">Font:</label>
-                    <select id="fontFamily" aria-label="Font family selector">
-                        <option value="'Courier New', monospace">Courier New</option>
-                        <option value="'Fira Code', monospace">Fira Code</option>
-                        <option value="'Consolas', 'Liberation Mono', Menlo, Courier, monospace">Consolas</option>
-                        <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
-                        <option value="Georgia, 'Times New Roman', serif">Georgia</option>
-                    </select>
-                </div>
+            <!-- Font size control -->
+            <div class="font-size-group" aria-label="Font size control">
+                <label for="fontSize" class="font-size-label">Font size:</label>
+                <input id="fontSize" type="number" min="10" max="48" value="16" step="1" inputmode="numeric" aria-label="Font size input">
             </div>
 
             <!-- Button controls -->

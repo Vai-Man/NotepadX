@@ -52,19 +52,24 @@ function init() {
     if (nextMatchBtn) nextMatchBtn.addEventListener('click', findNext);
     if (prevMatchBtn) prevMatchBtn.addEventListener('click', findPrev);
 
-    // Font size control
+    // Font size control (number input)
     if (fontSizeSlider) {
-        // Initialize from saved value or default
         const savedSize = loadFontSize();
         applyFontSize(savedSize);
         updateFontSizeUI(savedSize);
 
-        fontSizeSlider.addEventListener('input', (e) => {
-            const size = parseInt(e.target.value, 10);
-            applyFontSize(size);
-            updateFontSizeUI(size);
-            saveFontSize(size);
-        });
+        const onSizeChange = (e) => {
+            const raw = e.target.value;
+            const parsed = parseInt(raw, 10);
+            const size = Number.isFinite(parsed) ? parsed : savedSize;
+            const clamped = clamp(size, 10, 48);
+            applyFontSize(clamped);
+            updateFontSizeUI(clamped);
+            saveFontSize(clamped);
+        };
+
+        fontSizeSlider.addEventListener('input', onSizeChange);
+        fontSizeSlider.addEventListener('change', onSizeChange);
     }
 
     // Font family control
@@ -109,7 +114,7 @@ function loadNote() {
 // ===== FONT SIZE HELPERS =====
 function applyFontSize(size) {
     if (!notepad) return;
-    const clamped = clamp(size, 12, 28);
+    const clamped = clamp(size, 10, 48);
     notepad.style.fontSize = `${clamped}px`;
 }
 
@@ -126,7 +131,7 @@ function loadFontSize() {
     try {
         const stored = localStorage.getItem(FONT_SIZE_KEY);
         const parsed = stored ? parseInt(stored, 10) : 16;
-        if (Number.isFinite(parsed)) return clamp(parsed, 12, 28);
+        if (Number.isFinite(parsed)) return clamp(parsed, 10, 48);
         return 16;
     } catch { return 16; }
 }
