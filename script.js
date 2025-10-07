@@ -16,7 +16,7 @@ const prevMatchBtn = document.getElementById('prevMatch');
 const nextMatchBtn = document.getElementById('nextMatch');
 const fontSizeSlider = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
-const fontFamilySelect = document.getElementById('fontFamilySelect');
+const fontFamilySelect = document.getElementById('fontFamily');
 
 let lastSearch = '';
 let lastIndex = -1;
