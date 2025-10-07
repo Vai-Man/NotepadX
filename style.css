@@ -129,11 +129,48 @@ main {
     text-align: right;
 }
 
+#fontFamily {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+}
+
 .font-size-value {
     min-width: 44px;
     text-align: right;
     color: #333;
     font-weight: 700;
+}
+
+/* Inline wrapper for font controls */
+.font-controls-row {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Font family control */
+.font-family-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.font-family-label {
+    color: #555;
+    font-weight: 600;
+}
+
+#fontFamily {
+    min-width: 220px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
 }
 
 /* Base button styles */
