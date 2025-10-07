@@ -40,8 +40,8 @@ No installation or dependencies required.
 Contributions welcome! Ideas for features:
 
 - Dark mode
-- Search functionality
-- Word/character count
+- ~~Search functionality~~
+- ~~Word/character count~~
 - Multiple notes with tabs
 - Print functionality
 - Timestamp notes
@@ -60,4 +60,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ---
 
 Built for Hacktoberfest 2025
+
 
