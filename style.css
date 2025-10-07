@@ -132,6 +132,15 @@ main {
     font-weight: 700;
 }
 
+/* Inline wrapper for font controls */
+.font-controls-row {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 /* Font family control */
 .font-family-group {
     display: flex;
