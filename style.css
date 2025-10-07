@@ -108,6 +108,34 @@ main {
     font-size: 0.9rem;
 }
 
+/* Font size control */
+.font-size-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.font-size-label {
+    color: #555;
+    font-weight: 600;
+}
+
+#fontSize {
+    width: 80px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-align: right;
+}
+
+.font-size-value {
+    min-width: 44px;
+    text-align: right;
+    color: #333;
+    font-weight: 700;
+}
+
 /* Base button styles */
 .btn {
     flex: 1;

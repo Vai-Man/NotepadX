@@ -14,6 +14,8 @@ const wordCountEl = document.getElementById('wordCount');
 const searchInput = document.getElementById('searchInput');
 const prevMatchBtn = document.getElementById('prevMatch');
 const nextMatchBtn = document.getElementById('nextMatch');
+const fontSizeSlider = document.getElementById('fontSize');
+const fontSizeValue = document.getElementById('fontSizeValue');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -21,6 +23,7 @@ let lastIndex = -1;
 // ===== CONSTANTS =====
 // Key used to store notes in localStorage
 const STORAGE_KEY = 'notepadx_content';
+const FONT_SIZE_KEY = 'notepadx_font_size';
 
 // ===== INITIALIZATION =====
 // This function runs when the page loads
@@ -46,7 +49,26 @@ function init() {
     }
     if (nextMatchBtn) nextMatchBtn.addEventListener('click', findNext);
     if (prevMatchBtn) prevMatchBtn.addEventListener('click', findPrev);
-+
+
+    // Font size control (number input)
+    if (fontSizeSlider) {
+        const savedSize = loadFontSize();
+        applyFontSize(savedSize);
+        updateFontSizeUI(savedSize);
+
+        const onSizeChange = (e) => {
+            const raw = e.target.value;
+            const parsed = parseInt(raw, 10);
+            const size = Number.isFinite(parsed) ? parsed : savedSize;
+            const clamped = clamp(size, 10, 48);
+            applyFontSize(clamped);
+            updateFontSizeUI(clamped);
+            saveFontSize(clamped);
+        };
+
+        fontSizeSlider.addEventListener('input', onSizeChange);
+        fontSizeSlider.addEventListener('change', onSizeChange);
+    }
     
     // Auto-save feature: save notes every 5 seconds if there's content
     setInterval(autoSave, 5000);
@@ -73,6 +95,33 @@ function loadNote() {
         console.error('Load error:', error);
     }
 }
+
+// ===== FONT SIZE HELPERS =====
+function applyFontSize(size) {
+    if (!notepad) return;
+    const clamped = clamp(size, 10, 48);
+    notepad.style.fontSize = `${clamped}px`;
+}
+
+function updateFontSizeUI(size) {
+    if (fontSizeSlider) fontSizeSlider.value = String(size);
+    if (fontSizeValue) fontSizeValue.textContent = `${size}px`;
+}
+
+function saveFontSize(size) {
+    try { localStorage.setItem(FONT_SIZE_KEY, String(size)); } catch {}
+}
+
+function loadFontSize() {
+    try {
+        const stored = localStorage.getItem(FONT_SIZE_KEY);
+        const parsed = stored ? parseInt(stored, 10) : 16;
+        if (Number.isFinite(parsed)) return clamp(parsed, 10, 48);
+        return 16;
+    } catch { return 16; }
+}
+
+function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
 
 // ===== SAVE FUNCTION =====
 /**
