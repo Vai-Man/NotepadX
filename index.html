@@ -37,7 +37,17 @@
 
             <!-- Font size control -->
             <div class="font-size-group" aria-label="Font size control">
-                <label for="fontSize" class="font-size-label">Font size:</label>
+                <label for="fontFamily" class="font-size-label">Font:</label>
+                <select id="fontFamily" aria-label="Font family selector">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="monospace">Monospace</option>
+                </select>
+                <label for="fontSize" class="font-size-label">Size:</label>
                 <input id="fontSize" type="number" min="10" max="48" value="16" step="1" inputmode="numeric" aria-label="Font size input">
             </div>
 

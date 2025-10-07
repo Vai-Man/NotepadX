@@ -129,6 +129,14 @@ main {
     text-align: right;
 }
 
+#fontFamily {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+}
+
 .font-size-value {
     min-width: 44px;
     text-align: right;
