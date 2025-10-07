@@ -16,8 +16,7 @@ const prevMatchBtn = document.getElementById('prevMatch');
 const nextMatchBtn = document.getElementById('nextMatch');
 const fontSizeSlider = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
-const fontFamilySelect = document.getElementById('fontFamily');
-const fontFamilySelect = document.getElementById('fontFamily');
+const fontFamilySelect = document.getElementById('fontFamilySelect');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -26,7 +25,6 @@ let lastIndex = -1;
 // Key used to store notes in localStorage
 const STORAGE_KEY = 'notepadx_content';
 const FONT_SIZE_KEY = 'notepadx_font_size';
-const FONT_FAMILY_KEY = 'notepadx_font_family';
 const FONT_FAMILY_KEY = 'notepadx_font_family';
 
 // ===== INITIALIZATION =====
@@ -72,6 +70,19 @@ function init() {
 
         fontSizeSlider.addEventListener('input', onSizeChange);
         fontSizeSlider.addEventListener('change', onSizeChange);
+    }
+
+    // Font family control
+    if (fontFamilySelect) {
+        const savedFont = loadFontFamily();
+        applyFontFamily(savedFont);
+        fontFamilySelect.value = savedFont;
+
+        fontFamilySelect.addEventListener('change', (e) => {
+            const font = e.target.value;
+            applyFontFamily(font);
+            saveFontFamily(font);
+        });
     }
 
     // Font family control
@@ -139,6 +150,23 @@ function loadFontSize() {
 }
 
 function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+// ===== FONT FAMILY HELPERS =====
+function applyFontFamily(font) {
+    if (!notepad) return;
+    notepad.style.fontFamily = font;
+}
+
+function saveFontFamily(font) {
+    try { localStorage.setItem(FONT_FAMILY_KEY, font); } catch {}
+}
+
+function loadFontFamily() {
+    try {
+        const stored = localStorage.getItem(FONT_FAMILY_KEY);
+        return stored || 'Arial, sans-serif';
+    } catch { return 'Arial, sans-serif'; }
+}
 
 // ===== FONT FAMILY HELPERS =====
 function applyFontFamily(font) {
