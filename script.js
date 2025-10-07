@@ -16,6 +16,7 @@ const prevMatchBtn = document.getElementById('prevMatch');
 const nextMatchBtn = document.getElementById('nextMatch');
 const fontSizeSlider = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
+const fontFamilySelect = document.getElementById('fontFamily');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -24,6 +25,7 @@ let lastIndex = -1;
 // Key used to store notes in localStorage
 const STORAGE_KEY = 'notepadx_content';
 const FONT_SIZE_KEY = 'notepadx_font_size';
+const FONT_FAMILY_KEY = 'notepadx_font_family';
 
 // ===== INITIALIZATION =====
 // This function runs when the page loads
@@ -62,6 +64,19 @@ function init() {
             applyFontSize(size);
             updateFontSizeUI(size);
             saveFontSize(size);
+        });
+    }
+
+    // Font family control
+    if (fontFamilySelect) {
+        const savedFamily = loadFontFamily();
+        applyFontFamily(savedFamily);
+        updateFontFamilyUI(savedFamily);
+
+        fontFamilySelect.addEventListener('change', (e) => {
+            const family = e.target.value;
+            applyFontFamily(family);
+            saveFontFamily(family);
         });
     }
     
@@ -117,6 +132,31 @@ function loadFontSize() {
 }
 
 function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+// ===== FONT FAMILY HELPERS =====
+function applyFontFamily(family) {
+    if (!notepad) return;
+    notepad.style.fontFamily = family;
+}
+
+function updateFontFamilyUI(family) {
+    if (!fontFamilySelect) return;
+    // If the saved family isn't in the list, leave selection as-is
+    const options = Array.from(fontFamilySelect.options);
+    const match = options.find(o => o.value === family);
+    if (match) fontFamilySelect.value = family;
+}
+
+function saveFontFamily(family) {
+    try { localStorage.setItem(FONT_FAMILY_KEY, family); } catch {}
+}
+
+function loadFontFamily() {
+    try {
+        const stored = localStorage.getItem(FONT_FAMILY_KEY);
+        return stored || "'Courier New', monospace";
+    } catch { return "'Courier New', monospace"; }
+}
 
 // ===== SAVE FUNCTION =====
 /**

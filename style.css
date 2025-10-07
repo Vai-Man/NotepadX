@@ -132,6 +132,26 @@ main {
     font-weight: 700;
 }
 
+/* Font family control */
+.font-family-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.font-family-label {
+    color: #555;
+    font-weight: 600;
+}
+
+#fontFamily {
+    min-width: 220px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
 /* Base button styles */
 .btn {
     flex: 1;
