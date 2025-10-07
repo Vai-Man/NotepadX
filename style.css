@@ -122,7 +122,11 @@ main {
 }
 
 #fontSize {
-    width: 160px;
+    width: 80px;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    text-align: right;
 }
 
 .font-size-value {
