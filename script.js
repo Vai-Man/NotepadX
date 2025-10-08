@@ -475,7 +475,7 @@ function displayRandomQuote() {
     
     setTimeout(() => {
         quoteText.textContent = `"${quote.text}"`;
-        quoteAuthor.textContent = `— ${quote.author}`;
+        quoteAuthor.textContent = `${quote.author}`;
         quoteText.style.opacity = '1';
         quoteAuthor.style.opacity = '1';
     }, 200);
