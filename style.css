@@ -54,22 +54,50 @@ main {
     gap: 20px;
 }
 
+/* Editor container with line numbers */
+.editor-container {
+    display: flex;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.editor-container:focus-within {
+    border-color: #667eea;
+}
+
+/* Line numbers */
+.line-numbers {
+    background-color: #f5f5f5;
+    color: #888;
+    padding: 20px 10px;
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    user-select: none;
+    min-width: 50px;
+    overflow: hidden;
+    border-right: 1px solid #ddd;
+    white-space: pre;
+}
+
 /* Textarea styles */
 #notepad {
-    width: 100%;
+    flex: 1;
     min-height: 400px;
     padding: 20px;
     font-size: 1rem;
     font-family: 'Courier New', monospace;
-    border: 2px solid #ddd;
-    border-radius: 10px;
+    line-height: 1.5;
+    border: none;
     resize: vertical;
-    transition: border-color 0.3s ease;
+    overflow-y: auto;
 }
 
 #notepad:focus {
     outline: none;
-    border-color: #667eea;
 }
 
 /* Button group container */
@@ -276,5 +304,10 @@ footer {
 
     #notepad {
         min-height: 300px;
+    }
+
+    .line-numbers {
+        min-width: 40px;
+        padding: 20px 5px;
     }
 }
