@@ -18,6 +18,9 @@ const fontSizeSlider = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
 const fontFamilySelect = document.getElementById('fontFamily');
 const lineNumbers = document.getElementById('lineNumbers');
+const quoteText = document.getElementById('quoteText');
+const quoteAuthor = document.getElementById('quoteAuthor');
+const newQuoteBtn = document.getElementById('newQuoteBtn');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -27,6 +30,30 @@ let lastIndex = -1;
 const STORAGE_KEY = 'notepadx_content';
 const FONT_SIZE_KEY = 'notepadx_font_size';
 const FONT_FAMILY_KEY = 'notepadx_font_family';
+
+// ===== QUOTES COLLECTION =====
+const quotes = [
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+    { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+    { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+    { text: "Write what should not be forgotten.", author: "Isabel Allende" },
+    { text: "Start writing, no matter what. The water does not flow until the faucet is turned on.", author: "Louis L'Amour" },
+    { text: "You can make anything by writing.", author: "C.S. Lewis" },
+    { text: "There is no greater agony than bearing an untold story inside you.", author: "Maya Angelou" },
+    { text: "If you want to be a writer, you must do two things above all others: read a lot and write a lot.", author: "Stephen King" },
+    { text: "The scariest moment is always just before you start.", author: "Stephen King" },
+    { text: "You don't start out writing good stuff. You start out writing crap and thinking it's good stuff, and then gradually you get better at it.", author: "Octavia E. Butler" },
+    { text: "The first draft is just you telling yourself the story.", author: "Terry Pratchett" },
+    { text: "Ideas are like rabbits. You get a couple and learn how to handle them, and pretty soon you have a dozen.", author: "John Steinbeck" },
+    { text: "Don't tell me the moon is shining; show me the glint of light on broken glass.", author: "Anton Chekhov" },
+    { text: "The most valuable of all talents is that of never using two words when one will do.", author: "Thomas Jefferson" },
+    { text: "Every secret of a writer's soul, every experience of their life, every quality of their mind, is written large in their works.", author: "Virginia Woolf" },
+    { text: "Creativity is intelligence having fun.", author: "Albert Einstein" },
+    { text: "The purpose of life is not to be happy. It is to be useful, to be honorable, to be compassionate.", author: "Ralph Waldo Emerson" },
+    { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" }
+];
 
 // ===== INITIALIZATION =====
 // This function runs when the page loads
@@ -111,6 +138,12 @@ function init() {
             applyFontFamily(font);
             saveFontFamily(font);
         });
+    }
+
+    // Quote generator
+    if (newQuoteBtn) {
+        newQuoteBtn.addEventListener('click', displayRandomQuote);
+        displayRandomQuote(); // Show initial quote
     }
     
     // Auto-save feature: save notes every 5 seconds if there's content
@@ -423,6 +456,29 @@ function updateLineNumbers() {
 function syncScroll() {
     if (!lineNumbers || !notepad) return;
     lineNumbers.scrollTop = notepad.scrollTop;
+}
+
+// ===== QUOTE GENERATOR =====
+/**
+ * Display a random motivational or literary quote
+ */
+function displayRandomQuote() {
+    if (!quoteText || !quoteAuthor || quotes.length === 0) return;
+    
+    // Get a random quote from the array
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    const quote = quotes[randomIndex];
+    
+    // Display the quote with a fade effect
+    quoteText.style.opacity = '0';
+    quoteAuthor.style.opacity = '0';
+    
+    setTimeout(() => {
+        quoteText.textContent = `"${quote.text}"`;
+        quoteAuthor.textContent = `— ${quote.author}`;
+        quoteText.style.opacity = '1';
+        quoteAuthor.style.opacity = '1';
+    }, 200);
 }
 
 // ===== STATUS MESSAGE FUNCTION =====

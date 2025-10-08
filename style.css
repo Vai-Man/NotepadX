@@ -33,7 +33,7 @@ body {
 /* Header styles */
 header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 header h1 {
@@ -45,6 +45,54 @@ header h1 {
 .subtitle {
     color: #666;
     font-size: 1rem;
+}
+
+/* Quote container */
+.quote-container {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    border-left: 4px solid #667eea;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+}
+
+.quote-text {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.6;
+    transition: opacity 0.3s ease;
+}
+
+.quote-author {
+    font-size: 0.9rem;
+    color: #667eea;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.new-quote-btn {
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.new-quote-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+.new-quote-btn:active {
+    transform: translateY(0);
 }
 
 /* Main content area */
@@ -309,5 +357,17 @@ footer {
     .line-numbers {
         min-width: 40px;
         padding: 20px 5px;
+    }
+
+    .quote-container {
+        padding: 15px;
+    }
+
+    .quote-text {
+        font-size: 1rem;
+    }
+
+    .quote-author {
+        font-size: 0.85rem;
     }
 }
