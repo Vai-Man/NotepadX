@@ -18,12 +18,15 @@
 
         <!-- Main content area -->
         <main>
-            <!-- Text area where users can type their notes -->
-            <textarea 
-                id="notepad" 
-                placeholder="Start typing your notes here..."
-                aria-label="Note editor"
-            ></textarea>
+            <!-- Text area with line numbers -->
+            <div class="editor-container">
+                <div id="lineNumbers" class="line-numbers" aria-hidden="true"></div>
+                <textarea 
+                    id="notepad" 
+                    placeholder="Start typing your notes here..."
+                    aria-label="Note editor"
+                ></textarea>
+            </div>
 
             <!-- Word count display -->
             <div id="wordCount" class="word-count" aria-live="polite">Words: 0</div>

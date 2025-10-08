@@ -17,6 +17,7 @@ const nextMatchBtn = document.getElementById('nextMatch');
 const fontSizeSlider = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
 const fontFamilySelect = document.getElementById('fontFamily');
+const lineNumbers = document.getElementById('lineNumbers');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -37,8 +38,22 @@ function init() {
     saveBtn.addEventListener('click', saveNote);
     clearBtn.addEventListener('click', clearNote);
     downloadBtn.addEventListener('click', downloadNote);
-    // Update word count as the user types
-    notepad.addEventListener('input', updateWordCount);
+    // Update word count and line numbers as the user types
+    const updateContent = () => {
+        updateWordCount();
+        updateLineNumbers();
+    };
+    
+    notepad.addEventListener('input', updateContent);
+    notepad.addEventListener('keyup', updateContent);
+    notepad.addEventListener('change', updateContent);
+    notepad.addEventListener('paste', updateContent);
+    
+    // Sync line numbers scrolling with textarea
+    notepad.addEventListener('scroll', syncScroll);
+    
+    // Initialize line numbers
+    updateLineNumbers();
 
     // Wire up search controls if present
     if (searchInput) {
@@ -116,6 +131,7 @@ function loadNote() {
             notepad.value = savedContent;
             showStatus('Previous notes loaded successfully');
             updateWordCount();
+            updateLineNumbers();
         }
     } catch (error) {
         // Handle any errors (e.g., localStorage not available)
@@ -129,6 +145,8 @@ function applyFontSize(size) {
     if (!notepad) return;
     const clamped = clamp(size, 10, 48);
     notepad.style.fontSize = `${clamped}px`;
+    // Apply same font size to line numbers
+    if (lineNumbers) lineNumbers.style.fontSize = `${clamped}px`;
 }
 
 function updateFontSizeUI(size) {
@@ -155,6 +173,8 @@ function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
 function applyFontFamily(font) {
     if (!notepad) return;
     notepad.style.fontFamily = font;
+    // Apply same font family to line numbers
+    if (lineNumbers) lineNumbers.style.fontFamily = font;
 }
 
 function saveFontFamily(font) {
@@ -376,6 +396,33 @@ function findPrev() {
         showStatus('No previous matches', true);
         lastIndex = -1;
     }
+}
+
+// ===== LINE NUMBERS =====
+/**
+ * Update line numbers based on textarea content
+ */
+function updateLineNumbers() {
+    if (!lineNumbers || !notepad) return;
+    
+    const text = notepad.value;
+    const lines = text.split('\n').length;
+    
+    // Generate line numbers
+    let lineNumbersHtml = '';
+    for (let i = 1; i <= lines; i++) {
+        lineNumbersHtml += i + '\n';
+    }
+    
+    lineNumbers.textContent = lineNumbersHtml;
+}
+
+/**
+ * Sync line numbers scrolling with textarea
+ */
+function syncScroll() {
+    if (!lineNumbers || !notepad) return;
+    lineNumbers.scrollTop = notepad.scrollTop;
 }
 
 // ===== STATUS MESSAGE FUNCTION =====
