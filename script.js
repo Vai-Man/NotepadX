@@ -8,7 +8,6 @@
 const notepad = document.getElementById('notepad');
 const saveBtn = document.getElementById('saveBtn');
 const clearBtn = document.getElementById('clearBtn');
-const downloadBtn = document.getElementById('downloadBtn');
 const statusMessage = document.getElementById('statusMessage');
 const wordCountEl = document.getElementById('wordCount');
 const searchInput = document.getElementById('searchInput');
@@ -21,6 +20,24 @@ const lineNumbers = document.getElementById('lineNumbers');
 const quoteText = document.getElementById('quoteText');
 const quoteAuthor = document.getElementById('quoteAuthor');
 const newQuoteBtn = document.getElementById('newQuoteBtn');
+
+// Export elements
+const exportBtn = document.getElementById('exportBtn');
+const exportMenu = document.getElementById('exportMenu');
+const exportOptions = document.querySelectorAll('.export-option');
+
+// Gist modal elements
+const gistModal = document.getElementById('gistModal');
+const closeGistModal = document.getElementById('closeGistModal');
+const cancelGist = document.getElementById('cancelGist');
+const createGist = document.getElementById('createGist');
+const gistToken = document.getElementById('gistToken');
+const gistFilename = document.getElementById('gistFilename');
+const gistDescription = document.getElementById('gistDescription');
+const gistPublic = document.getElementById('gistPublic');
+const clearToken = document.getElementById('clearToken');
+const tokenStatus = document.getElementById('tokenStatus');
+const toggleTokenVisibility = document.getElementById('toggleTokenVisibility');
 
 let lastSearch = '';
 let lastIndex = -1;
@@ -58,13 +75,14 @@ const quotes = [
 // ===== INITIALIZATION =====
 // This function runs when the page loads
 function init() {
+    console.log('NotepadX initializing...');
+    
     // Load any previously saved notes from localStorage
     loadNote();
     
     // Set up event listeners for buttons
     saveBtn.addEventListener('click', saveNote);
     clearBtn.addEventListener('click', clearNote);
-    downloadBtn.addEventListener('click', downloadNote);
     // Update word count and line numbers as the user types
     const updateContent = () => {
         updateWordCount();
@@ -142,12 +160,58 @@ function init() {
 
     // Quote generator
     if (newQuoteBtn) {
+        console.log('Setting up quote generator...');
         newQuoteBtn.addEventListener('click', displayRandomQuote);
         displayRandomQuote(); // Show initial quote
+    } else {
+        console.error('newQuoteBtn not found!');
+    }
+
+    // Export dropdown functionality
+    if (exportBtn && exportMenu) {
+        console.log('Setting up export menu...');
+        exportBtn.addEventListener('click', toggleExportMenu);
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!exportBtn.contains(e.target) && !exportMenu.contains(e.target)) {
+                exportMenu.classList.remove('show');
+                exportBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Handle export option clicks
+        exportOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                const format = e.target.closest('.export-option').dataset.format;
+                console.log('Export format selected:', format);
+                handleExport(format);
+                exportMenu.classList.remove('show');
+                exportBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+    } else {
+        console.error('exportBtn or exportMenu not found!', {exportBtn, exportMenu});
+    }
+
+    // Gist modal functionality
+    if (closeGistModal) closeGistModal.addEventListener('click', closeModal);
+    if (cancelGist) cancelGist.addEventListener('click', closeModal);
+    if (createGist) createGist.addEventListener('click', createGitHubGist);
+    if (clearToken) clearToken.addEventListener('click', clearSavedToken);
+    if (toggleTokenVisibility) toggleTokenVisibility.addEventListener('click', toggleTokenDisplay);
+    
+    // Close modal when clicking outside
+    if (gistModal) {
+        gistModal.addEventListener('click', (e) => {
+            if (e.target === gistModal) closeModal();
+        });
     }
     
     // Auto-save feature: save notes every 5 seconds if there's content
     setInterval(autoSave, 5000);
+    
+    console.log('NotepadX initialization complete!');
 }
 
 // ===== LOAD FUNCTION =====
@@ -479,6 +543,261 @@ function displayRandomQuote() {
         quoteText.style.opacity = '1';
         quoteAuthor.style.opacity = '1';
     }, 200);
+}
+
+// ===== EXPORT FUNCTIONALITY =====
+/**
+ * Toggle export dropdown menu
+ */
+function toggleExportMenu(e) {
+    e.stopPropagation();
+    const isOpen = exportMenu.classList.toggle('show');
+    exportBtn.setAttribute('aria-expanded', isOpen);
+}
+
+/**
+ * Handle export based on selected format
+ */
+function handleExport(format) {
+    const content = notepad.value;
+    
+    if (!content.trim()) {
+        showStatus('Nothing to export! Please write some notes first.', true);
+        return;
+    }
+
+    switch(format) {
+        case 'txt':
+            exportAsTxt(content);
+            break;
+        case 'md':
+            exportAsMarkdown(content);
+            break;
+        case 'pdf':
+            exportAsPdf(content);
+            break;
+        case 'gist':
+            openGistModal();
+            break;
+        default:
+            showStatus('Unknown export format', true);
+    }
+}
+
+/**
+ * Export as plain text file
+ */
+function exportAsTxt(content) {
+    try {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `notes_${Date.now()}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showStatus('Notes exported as TXT successfully!');
+    } catch (error) {
+        showStatus('Failed to export as TXT', true);
+        console.error('TXT export error:', error);
+    }
+}
+
+/**
+ * Export as Markdown file
+ */
+function exportAsMarkdown(content) {
+    try {
+        // Add markdown metadata
+        const timestamp = new Date().toLocaleString();
+        const markdown = `# Notes from NotepadX\n\n**Date:** ${timestamp}\n\n---\n\n${content}`;
+        
+        const blob = new Blob([markdown], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `notes_${Date.now()}.md`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showStatus('Notes exported as Markdown successfully!');
+    } catch (error) {
+        showStatus('Failed to export as Markdown', true);
+        console.error('Markdown export error:', error);
+    }
+}
+
+/**
+ * Export as PDF file
+ */
+function exportAsPdf(content) {
+    try {
+        // Check if jsPDF is loaded
+        if (typeof window.jspdf === 'undefined') {
+            showStatus('PDF library not loaded. Please refresh the page.', true);
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(16);
+        doc.text('Notes from NotepadX', 20, 20);
+        
+        // Add timestamp
+        doc.setFontSize(10);
+        doc.text(`Date: ${new Date().toLocaleString()}`, 20, 30);
+        
+        // Add content
+        doc.setFontSize(12);
+        const lines = doc.splitTextToSize(content, 170);
+        doc.text(lines, 20, 40);
+        
+        // Save PDF
+        doc.save(`notes_${Date.now()}.pdf`);
+        showStatus('Notes exported as PDF successfully!');
+    } catch (error) {
+        showStatus('Failed to export as PDF', true);
+        console.error('PDF export error:', error);
+    }
+}
+
+/**
+ * Open GitHub Gist modal
+ */
+function openGistModal() {
+    if (gistModal) {
+        gistModal.classList.add('show');
+        gistModal.setAttribute('aria-hidden', 'false');
+        
+        // Load saved token if exists and show status
+        const savedToken = localStorage.getItem('github_token');
+        if (savedToken && gistToken) {
+            gistToken.value = savedToken;
+            if (tokenStatus) {
+                tokenStatus.style.display = 'flex';
+            }
+        } else {
+            if (tokenStatus) {
+                tokenStatus.style.display = 'none';
+            }
+        }
+    }
+}
+
+/**
+ * Close GitHub Gist modal
+ */
+function closeModal() {
+    if (gistModal) {
+        gistModal.classList.remove('show');
+        gistModal.setAttribute('aria-hidden', 'true');
+    }
+}
+
+/**
+ * Create GitHub Gist
+ */
+async function createGitHubGist() {
+    const token = gistToken.value.trim();
+    const filename = gistFilename.value.trim() || 'notes.md';
+    const description = gistDescription.value.trim() || 'Notes from NotepadX';
+    const isPublic = gistPublic.checked;
+    const content = notepad.value;
+
+    if (!token) {
+        showStatus('Please enter your GitHub token', true);
+        return;
+    }
+
+    if (!content.trim()) {
+        showStatus('Nothing to share! Please write some notes first.', true);
+        return;
+    }
+
+    try {
+        showStatus('Creating Gist...');
+        
+        const response = await fetch('https://api.github.com/gists', {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                description: description,
+                public: isPublic,
+                files: {
+                    [filename]: {
+                        content: content
+                    }
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`GitHub API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Save token for future use
+        localStorage.setItem('github_token', token);
+        
+        // Close modal
+        closeModal();
+        
+        // Show success with link
+        showStatus('Gist created successfully!');
+        
+        // Open gist in new tab
+        window.open(data.html_url, '_blank');
+        
+    } catch (error) {
+        showStatus('Failed to create Gist. Check your token and try again.', true);
+        console.error('Gist creation error:', error);
+    }
+}
+
+/**
+ * Clear saved GitHub token
+ */
+function clearSavedToken() {
+    if (confirm('Are you sure you want to clear your saved GitHub token?')) {
+        localStorage.removeItem('github_token');
+        if (gistToken) {
+            gistToken.value = '';
+        }
+        if (tokenStatus) {
+            tokenStatus.style.display = 'none';
+        }
+        showStatus('GitHub token cleared successfully');
+    }
+}
+
+/**
+ * Toggle token visibility (show/hide password)
+ */
+function toggleTokenDisplay() {
+    if (!gistToken) return;
+    
+    if (gistToken.type === 'password') {
+        gistToken.type = 'text';
+        if (toggleTokenVisibility) {
+            toggleTokenVisibility.textContent = '🙈';
+            toggleTokenVisibility.title = 'Hide token';
+        }
+    } else {
+        gistToken.type = 'password';
+        if (toggleTokenVisibility) {
+            toggleTokenVisibility.textContent = '👁️';
+            toggleTokenVisibility.title = 'Show token';
+        }
+    }
 }
 
 // ===== STATUS MESSAGE FUNCTION =====

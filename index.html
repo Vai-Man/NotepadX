@@ -73,10 +73,26 @@
                     Clear
                 </button>
                 
-                <!-- Download button - downloads notes as .txt file -->
-                <button id="downloadBtn" class="btn btn-success" aria-label="Download note">
-                    Download
-                </button>
+                <!-- Export dropdown menu -->
+                <div class="export-dropdown">
+                    <button id="exportBtn" class="btn btn-success" aria-label="Export note" aria-haspopup="true" aria-expanded="false">
+                        Export ▼
+                    </button>
+                    <div id="exportMenu" class="export-menu" role="menu">
+                        <button class="export-option" data-format="txt" role="menuitem">
+                            Export as TXT
+                        </button>
+                        <button class="export-option" data-format="md" role="menuitem">
+                            Export as Markdown
+                        </button>
+                        <button class="export-option" data-format="pdf" role="menuitem">
+                            Export as PDF
+                        </button>
+                        <button class="export-option" data-format="gist" role="menuitem">
+                            Share as GitHub Gist
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Status message area -->
@@ -89,7 +105,51 @@
         </footer>
     </div>
 
+    <!-- GitHub Gist Modal -->
+    <div id="gistModal" class="modal" role="dialog" aria-labelledby="gistModalTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="gistModalTitle">Share as GitHub Gist</h2>
+                <button class="modal-close" id="closeGistModal" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>To share your notes as a GitHub Gist, you need a Personal Access Token.</p>
+                <div class="form-group">
+                    <label for="gistToken">GitHub Personal Access Token:</label>
+                    <div class="token-input-group">
+                        <input type="password" id="gistToken" placeholder="ghp_xxxxxxxxxxxx" aria-describedby="tokenHelp">
+                        <button id="toggleTokenVisibility" class="btn-icon" aria-label="Toggle token visibility" title="Show/Hide token">👁️</button>
+                    </div>
+                    <small id="tokenHelp">Get your token from <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings</a> (needs 'gist' scope)</small>
+                    <div id="tokenStatus" class="token-status" style="display: none;">
+                        <span class="token-saved">✓ Token saved</span>
+                        <button id="clearToken" class="btn-link">Clear saved token</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gistFilename">Filename:</label>
+                    <input type="text" id="gistFilename" value="notes.md" placeholder="filename.md">
+                </div>
+                <div class="form-group">
+                    <label for="gistDescription">Description:</label>
+                    <input type="text" id="gistDescription" placeholder="My notes from NotepadX">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="gistPublic">
+                        Make this Gist public
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelGist" class="btn btn-secondary">Cancel</button>
+                <button id="createGist" class="btn btn-primary">Create Gist</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Link to external JavaScript file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
